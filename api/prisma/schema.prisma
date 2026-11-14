@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATRON
+  LIBRARIAN
+}
+
+enum BorrowStatus {
+  REQUESTED
+  PENDING
+  APPROVED
+  BORROWED
+  RETURNED
+  OVERDUE
+  REJECTED
+  CANCELLED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id             Int             @id @default(autoincrement())
+  email          String          @unique
+  password       String
+  name           String
+  role           Role            @default(PATRON)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  reviews        Review[]
+  borrowRequests BorrowRequest[]
+  bookings       Booking[]
+}
+
+model Genre {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+  books Book[]
+}
+
+model Book {
+  id              Int             @id @default(autoincrement())
+  title           String
+  author          String
+  isbn            String          @unique
+  totalCopies     Int             @default(1)
+  availableCopies  Int             @default(1)
+  genreId         Int
+  genre           Genre           @relation(fields: [genreId], references: [id])
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  reviews         Review[]
+  borrowRequests  BorrowRequest[]
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  comment   String
+  bookId    Int
+  book      Book     @relation(fields: [bookId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model BorrowRequest {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+  bookId      Int
+  book        Book         @relation(fields: [bookId], references: [id])
+  bookTitle   String
+  bookAuthor  String
+  status      BorrowStatus @default(REQUESTED)
+  requestDate DateTime     @default(now())
+  dueDate     DateTime?
+  returnDate  DateTime?
+  fineAmount  Float        @default(0)
+}
+
+model Space {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  capacity    Int       @default(4)
+  description String?
+  bookings    Booking[]
+}
+
+model Booking {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  user      User          @relation(fields: [userId], references: [id])
+  spaceId   Int
+  space     Space         @relation(fields: [spaceId], references: [id])
+  date      String
+  startTime String
+  endTime   String
+  status    BookingStatus @default(CONFIRMED)
+  createdAt DateTime      @default(now())
+}
