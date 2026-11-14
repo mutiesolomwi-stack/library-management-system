@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "Library Management System API"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Patron",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/auth/register"
+          }
+        },
+        {
+          "name": "Login Patron",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Genres",
+      "item": [
+        {
+          "name": "Get Genres",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/genres"
+          }
+        },
+        {
+          "name": "Create Genre",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/genres"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Books",
+      "item": [
+        {
+          "name": "Get Books",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/books?genreId=1&search=Dune&page=1&limit=10"
+          }
+        },
+        {
+          "name": "Create Book",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/books"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/users/profile"
+          }
+        }
+      ]
+    }
+  ]
+}
